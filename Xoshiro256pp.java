@@ -2,10 +2,10 @@ public class Xoshiro256pp {
 	public static void main(String[] args) {
 		var x = new Xoshiro256pp(1234, 5678, 91012, 3456);
 		
-		for (var i = 0; i < 100000000; i++) {
-			var n = x.next();
-			if (i % 1000000 == 0) {
-				System.out.println(n);
+		for (var i = 0; i < 1000000000; i++) {
+			var n = x.nextInt(1, 100);
+			if (i % 100000000 == 0) {
+				System.out.println(i + ":" + n);
 			}
 		}
 	}
@@ -18,7 +18,7 @@ public class Xoshiro256pp {
 		jump();
 	}
 	
-	public long next() {
+	public long nextLong() {
 		long result = rotl(s[0] + s[3], 23) + s[0];
 
 		long t = s[1] << 17;
@@ -33,6 +33,34 @@ public class Xoshiro256pp {
 		s[3] = rotl(s[3], 45);
 
 		return result;
+	}
+	
+	public long nextLong(long min, long max) {
+		long range = max - min + 1;
+		if (range <= 0) {
+			while (true) {
+				long n = nextLong();
+				if (min <= n && n <= max) {
+					return n;
+				}
+			}
+		} else {
+			long lim = (Long.MAX_VALUE - range + 1) % range;
+			while (true) {
+				long n = nextLong() & Long.MAX_VALUE;
+				if (lim <= n) {
+					return n % range + min;
+				}
+			}
+		}
+	}
+	
+	public int nextInt() {
+		return (int)nextLong();
+	}
+	
+	public int nextInt(int min, int max) {
+		return (int)nextLong(min, max);
 	}
 
 	private long rotl(long x, int k) {
@@ -53,7 +81,7 @@ public class Xoshiro256pp {
 					s2 ^= s[2];
 					s3 ^= s[3];
 				}
-				next();	
+				nextLong();	
 			}
 		}
 		
