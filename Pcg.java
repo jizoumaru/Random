@@ -3,23 +3,16 @@ final class Pcg implements IntSupplier {
 	private long s;
 
 	Pcg() {
-		SecureRandom sr = new SecureRandom();
-		long i = sr.nextLong();
-		long s = sr.nextLong();
-
-		this.s = 0L;
-		this.i = (i << 1L) | 1L;
-		getAsInt();
-		this.s += s;
-		getAsInt();
+		var sr = new SecureRandom();
+		this.i = (sr.nextLong() << 1L) | 1L;
+		this.s = this.i + sr.nextLong();
 	}
 
 	@Override
 	public int getAsInt() {
-		long o = s;
-		s = o * 6364136223846793005L + i;
-		int x = (int) (((o >>> 18L) ^ o) >>> 27L);
-		int r = (int) (o >>> 59L);
+		s = s * 6364136223846793005L + i;
+		int x = (int) (((s >>> 18L) ^ s) >>> 27L);
+		int r = (int) (s >>> 59L);
 		return (x >>> r) | (x << ((-r) & 31));
 	}
 }
