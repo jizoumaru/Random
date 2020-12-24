@@ -34,7 +34,7 @@ interface IRand {
 	}
 
 	default long nextLong() {
-		return (long)nextInt() << 32 | (long)nextInt();
+		return (long)nextInt() << 32 | (long)nextInt() & 0xFFFFFFFFL;
 	}
 	
 	default long nextLong(long from, long to) {
