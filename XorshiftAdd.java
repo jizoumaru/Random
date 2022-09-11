@@ -2,20 +2,24 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.function.IntSupplier;
 
-public class XorshiftAdd implements IntSupplier {
+public class XorshiftAdd implements IntSupplier
+{
 	private final int[] s;
 
-	public XorshiftAdd() {
+	public XorshiftAdd()
+	{
 		var s = new int[4];
-		var b = ByteBuffer.wrap(SecureRandom.getSeed(Integer.SIZE * s.length));
-		for (var i = 0; i < s.length; i++) {
-			s[i] = b.getInt(Integer.SIZE * i);
+		var b = ByteBuffer.wrap(SecureRandom.getSeed(Integer.BYTES * s.length));
+		for (var i = 0; i < s.length; i++)
+		{
+			s[i] = b.getInt();
 		}
 		this.s = s;
 	}
 
 	@Override
-	public int getAsInt() {
+	public int getAsInt()
+	{
 		var t = s[0];
 		t ^= t << 15;
 		t ^= t >>> 18;
