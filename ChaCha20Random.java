@@ -13,8 +13,9 @@ public class ChaCha20Random implements RandomGenerator
 {
 	private byte[] s = new byte[4096];
 	private final ByteBuffer b = ByteBuffer.allocate(s.length);
-	
-	public ChaCha20Random() {
+
+	public ChaCha20Random()
+	{
 		try
 		{
 			SecureRandom.getInstanceStrong().nextBytes(s);
