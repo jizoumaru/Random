@@ -1,5 +1,4 @@
 import java.nio.ByteBuffer;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.random.RandomGenerator;
@@ -11,34 +10,26 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class ChaCha20Random implements RandomGenerator
 {
-	private byte[] s = new byte[4096];
-	private final ByteBuffer b = ByteBuffer.allocate(s.length);
+	private byte[] s;
+	private final ByteBuffer b;
 
 	public ChaCha20Random()
 	{
-		try
-		{
-			SecureRandom.getInstanceStrong().nextBytes(s);
-
-			for (var i = 0; i < 1000; i++)
-			{
-				refill();
-			}
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			throw new RuntimeException(e);
-		}
+		s = SecureRandom.getSeed(32 + 12 + 800);
+		b = ByteBuffer.allocate(s.length).flip();
 	}
 
-	void refill()
+	public <T> T pick(@SuppressWarnings("unchecked") T... xs)
+	{
+		return xs[nextInt(xs.length)];
+	}
+
+	public void refill()
 	{
 		var k = new SecretKeySpec(s, 0, 32, "ChaCha20");
 		var n = Arrays.copyOfRange(s, 32, 32 + 12);
 		s = encrypt(s, k, n, 0);
-		b.clear();
-		b.put(s);
-		b.flip();
+		b.clear().put(s).position(32 + 12);
 	}
 
 	@Override
